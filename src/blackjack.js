@@ -33,7 +33,7 @@
         // Check if player has busted
         const player_busted = await playerHasBusted(session, playerCards);
         if(player_busted) {
-            ctx.fillText("You busted!", 15, 400)
+            ctx.fillText("¡Te has estallado!", 15, 400)
             hitButton.disabled = true;
             standButton.disabled = true;
         }
@@ -57,10 +57,9 @@
     })
 })();
 
-// Calcula la puntuación de una mano
+// Determina si el jugador se ha pasado o no
 async function playerHasBusted(session, hand) {
     const goal = "has_player_busted(" + hand.toString() + ").";
-    console.log(goal)
     await session.promiseQuery(goal);
     const answer = await session.promiseAnswer();
     return answer;
@@ -69,7 +68,6 @@ async function playerHasBusted(session, hand) {
 // El jugador pide una carta
 async function playerDrawCard(session, deck, playerHand) {
     const goal = "draw_card_into_hand(" + deck.toString() + ", NewDeck," + playerHand.toString() + ", NewHand).";
-    console.log(goal)
     await session.promiseQuery(goal);
     const answer = await session.promiseAnswer();
     const newHand = answer.lookup("NewHand");
@@ -80,7 +78,6 @@ async function playerDrawCard(session, deck, playerHand) {
 // Hace que el crupier juegue su turno
 async function dealerTurn(session, deck, dealerHand) {
     const goal = "dealer_turn(" + deck.toString() + ", " + dealerHand.toString() + ", NewDealerHand).";
-    console.log(goal)
     await session.promiseQuery(goal);
     const answer = await session.promiseAnswer();
     const newHand = answer.lookup("NewDealerHand");
@@ -90,7 +87,6 @@ async function dealerTurn(session, deck, dealerHand) {
 // Determina el ganador de la partida
 async function determineWinner(session, playerHand, dealerHand) {
     const goal = "determine_winner(" + playerHand.toString() + ", " + dealerHand.toString() + ", Winner).";
-    console.log(goal)
     await session.promiseQuery(goal);
     const answer = await session.promiseAnswer();
     const winner = answer.lookup("Winner");
