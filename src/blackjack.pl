@@ -8,7 +8,7 @@ cards(Deck) :-
     findall(card(Suit, Card), (member(Suit, Suits), member(Card, Cards)), Deck).
 
 % value/2 devuelve el valor de una carta
-value(card(_, ace), 1).
+value(card(_, ace), 11).
 value(card(_, two), 2).
 value(card(_, three), 3).
 value(card(_, four), 4).
@@ -59,7 +59,7 @@ initial_setup(PlayerCards, DealerCards, Rest4) :-
     PlayerCards = [PlayerCard1, PlayerCard2],
     DealerCards = [DealerCard1, DealerCard2].
 
-% dealer_turn/2 juega el turno del dealer hasta que su puntaje sea mayor o igual a 17
+% dealer_turn/2 juega el turno del crupier hasta que su puntaje sea mayor o igual a 17
 dealer_turn(Deck, DealerCards, NewDealerCards) :-
     score(DealerCards, DealerSum),
     DealerSum < 17,
@@ -69,15 +69,17 @@ dealer_turn(Deck, DealerCards, DealerCards).
 
 % determine_winner/3 determina el ganador del juego
 determine_winner(PlayerCards, DealerCards, Winner) :-
-    score(PlayerCards, PlayerSum),
-    score(DealerCards, DealerSum),
-    (PlayerSum > 21 ->
+    score(PlayerCards, PlayerScore),
+    score(DealerCards, DealerScore),
+    (PlayerScore > 21 ->
         Winner = dealer
-    ;   PlayerSum = DealerSum ->
-        Winner = tie
-    ;   PlayerSum > DealerSum ->
+    ;   DealerScore > 21 ->
         Winner = player
-    ;   Winner = dealer).
+    ;   PlayerScore > DealerScore ->
+        Winner = player
+    ;   DealerScore > PlayerScore ->
+        Winner = dealer
+    ;   Winner = push).
 
 % has_player_busted/1 devuelve true si el jugador se pasó de 21
 has_player_busted(PlayerCards) :-
